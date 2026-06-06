@@ -42,8 +42,8 @@ pw-visual-tests-demo/
 │   ├── buffer-snapshot.spec.ts
 │   ├── fixtures.ts            # variant fixture (appends ?variant=v2)
 │   └── hide-dynamic.css       # injected via stylePath
-├── snapshots/                 # snapshotDir — baselines (Git LFS), .gitkeep only
-├── test-results/              # results.json committed; traces/diffs gitignored
+├── snapshots/                 # snapshotDir — v1 baseline PNGs, committed via Git LFS
+├── test-results/              # results.json committed; traces/diffs/report gitignored
 ├── playwright.config.ts
 ├── playwright.variant.config.ts  # v2 variant run (simulate failures)
 ├── package.json
@@ -64,7 +64,7 @@ specific visual-regression scenario:
 | `/dynamic`    | Live timestamp, random quote, parameterised avatar.                     |
 | `/themes`     | Same UI in light and dark variants side by side.                        |
 | `/states`     | Sign-up form reachable in 4 states via `?state=`.                       |
-| `/slow`       | Content revealed after ~1.5s; also tall enough to scroll (`fullPage`).  |
+| `/slow`       | Content revealed after ~1s (1.5s in v2); also tall enough to scroll.    |
 
 A consistent nav bar appears on every page. Plain HTML + CSS only — no React, no
 build step, no bundler.
@@ -117,25 +117,25 @@ every spec runs once, against this one browser/viewport.
 
 ---
 
-## Generating baselines for the first time
+## Baselines
 
-No baseline PNGs are committed to this repo. The **first** run has nothing to
-compare against, so you must generate the baselines once:
+This repo **ships committed v1 baselines** (under `snapshots/`, via Git LFS),
+generated on **desktop Chromium / macOS**. If you are on the same platform you
+can run `npm test` straight after cloning and it will compare against them.
+
+Screenshots are **platform- and browser-dependent**, so baselines generated on
+macOS will not match a Linux CI runner. On a different platform — or after you
+intentionally change the UI — regenerate them:
 
 ```bash
 npm run baselines:generate
 # equivalent to: npx playwright test --update-snapshots
 ```
 
-This writes baseline PNGs into `snapshots/`, organised by spec file, project and
-platform (see `snapshotPathTemplate` in `playwright.config.ts`). Because
-screenshots are **platform- and browser-dependent**, baselines generated on
-macOS will not match a Linux CI runner. Generate baselines on the same platform
-you intend to compare against (commonly via a Docker container or CI job), then
-commit them via Git LFS.
-
-After baselines exist, a normal `npm test` compares against them and fails on
-any visual drift.
+This (re)writes baseline PNGs into `snapshots/`, organised by spec file, project
+and platform (see `snapshotPathTemplate` in `playwright.config.ts`). Commit the
+regenerated PNGs via Git LFS. After baselines exist, a normal `npm test`
+compares against them and fails on any visual drift.
 
 ---
 
@@ -292,9 +292,10 @@ git lfs track          # should list snapshots/**/*.png
 git lfs ls-files       # lists the PNGs stored in LFS
 ```
 
-> **Note:** only `snapshots/` baselines are committed. The `test-results/` and
-> `playwright-report/` directories are gitignored — they are regenerated on
-> every run.
+> **Note:** the `snapshots/` baselines and `test-results/results.json` (the
+> latest run's results) are committed. The rest of `test-results/` (per-test
+> traces and diff PNGs) and the `playwright-report/` HTML report are gitignored
+> — they are regenerated on every run.
 
 ---
 
