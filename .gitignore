@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+
+# Playwright output.
+# Keep the JSON results file checked in (we commit the latest test result);
+# ignore the rest of test-results/ (per-test trace/diff folders) and the
+# regenerated HTML report.
+test-results/*
+!test-results/results.json
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# OS / editor cruft
+.DS_Store
+*.log
+.idea/
+.vscode/

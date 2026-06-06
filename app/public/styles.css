@@ -1,0 +1,568 @@
+/* =========================================================================
+   pw-visual-tests-demo — shared stylesheet
+   Plain CSS, no preprocessor. Uses CSS custom properties so the /themes
+   page can flip between light and dark by toggling a single attribute.
+   ========================================================================= */
+
+:root {
+  --bg: #f5f7fa;
+  --surface: #ffffff;
+  --surface-alt: #eef2f7;
+  --border: #d7dee8;
+  --text: #1c2733;
+  --text-muted: #5a6b7b;
+  --primary: #2f6df6;
+  --primary-text: #ffffff;
+  --success: #1f9d55;
+  --danger: #e02424;
+  --warning: #b7791f;
+  --badge-bg: #e4ecfb;
+  --badge-text: #2f6df6;
+  --shadow: 0 1px 3px rgba(28, 39, 51, 0.12);
+  --radius: 10px;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+}
+
+/* Dark variant — applied via [data-theme="dark"] on any container. */
+[data-theme="dark"] {
+  --bg: #10151c;
+  --surface: #1a212b;
+  --surface-alt: #222b37;
+  --border: #2f3a48;
+  --text: #e6edf5;
+  --text-muted: #9aa9ba;
+  --primary: #5b8cff;
+  --primary-text: #0b1018;
+  --success: #3ad07f;
+  --danger: #ff6b6b;
+  --warning: #f0c674;
+  --badge-bg: #233045;
+  --badge-text: #9bbcff;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------------------------------------------------------------- nav bar */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 0 32px;
+  height: 60px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.nav__brand {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--text);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.nav__links {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.nav__link {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 14px;
+  padding: 6px 12px;
+  border-radius: 6px;
+}
+
+.nav__link:hover {
+  background: var(--surface-alt);
+  color: var(--text);
+}
+
+.nav__link--active {
+  color: var(--primary);
+  background: var(--badge-bg);
+}
+
+/* ----------------------------------------------------------- page layout */
+.page {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 40px 32px 80px;
+}
+
+.page__title {
+  font-size: 30px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  letter-spacing: -0.02em;
+}
+
+.page__subtitle {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin: 0 0 32px;
+}
+
+.section {
+  margin-bottom: 40px;
+}
+
+.section__heading {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 16px;
+}
+
+/* -------------------------------------------------------------- surfaces */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px;
+}
+
+.card__title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+
+.card__body {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin: 0;
+}
+
+.grid {
+  display: grid;
+  gap: 20px;
+}
+
+.grid--2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.grid--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* --------------------------------------------------------------- buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  line-height: 1;
+}
+
+.btn--primary {
+  background: var(--primary);
+  color: var(--primary-text);
+}
+
+.btn--secondary {
+  background: var(--surface-alt);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.btn--danger {
+  background: var(--danger);
+  color: #fff;
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------------------------------------------------------------- badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--badge-bg);
+  color: var(--badge-text);
+}
+
+.badge--success {
+  background: rgba(31, 157, 85, 0.15);
+  color: var(--success);
+}
+
+.badge--danger {
+  background: rgba(224, 36, 36, 0.15);
+  color: var(--danger);
+}
+
+.badge--warning {
+  background: rgba(183, 121, 31, 0.15);
+  color: var(--warning);
+}
+
+/* ----------------------------------------------------------- form inputs */
+.field {
+  margin-bottom: 16px;
+}
+
+.field__label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.input,
+.textarea,
+.select {
+  width: 100%;
+  font-family: inherit;
+  font-size: 14px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--badge-bg);
+}
+
+.input--error {
+  border-color: var(--danger);
+}
+
+.input--success {
+  border-color: var(--success);
+}
+
+.field__hint {
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+.field__hint--error {
+  color: var(--danger);
+}
+
+.field__hint--success {
+  color: var(--success);
+}
+
+/* ---------------------------------------------------------------- alerts */
+.alert {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  border: 1px solid var(--border);
+  background: var(--surface-alt);
+  margin-bottom: 16px;
+}
+
+.alert__icon {
+  font-weight: 700;
+}
+
+.alert--info {
+  border-color: var(--primary);
+  background: var(--badge-bg);
+  color: var(--badge-text);
+}
+
+.alert--success {
+  border-color: var(--success);
+  background: rgba(31, 157, 85, 0.12);
+  color: var(--success);
+}
+
+.alert--danger {
+  border-color: var(--danger);
+  background: rgba(224, 36, 36, 0.12);
+  color: var(--danger);
+}
+
+.alert--warning {
+  border-color: var(--warning);
+  background: rgba(183, 121, 31, 0.12);
+  color: var(--warning);
+}
+
+/* -------------------------------------------------- /dynamic page pieces */
+.dynamic-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.stat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+.stat__label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin: 0 0 8px;
+}
+
+.stat__value {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 3px solid var(--border);
+  object-fit: cover;
+  background: var(--surface-alt);
+}
+
+/* ---------------------------------------------------- /themes side-by-side */
+.theme-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.theme-pane {
+  padding: 28px;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.theme-pane__label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin: 0 0 16px;
+}
+
+/* --------------------------------------------------------- /slow page */
+.slow-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 220px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.slow-content {
+  opacity: 0;
+}
+
+.slow-content--ready {
+  opacity: 1;
+}
+
+/* --------------------------------------------------- scrollable section */
+/* Used by the fullPage screenshot test — guarantees the page scrolls. */
+.tall {
+  min-height: 1600px;
+}
+
+.tall__filler {
+  height: 360px;
+  border-radius: var(--radius);
+  border: 1px dashed var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+  background: var(--surface);
+}
+
+/* Responsive: collapse multi-column grids on mobile viewport. */
+@media (max-width: 600px) {
+  .grid--2,
+  .grid--3,
+  .dynamic-grid,
+  .dynamic-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .theme-split {
+    grid-template-columns: 1fr;
+  }
+
+  .page {
+    padding: 24px 18px 60px;
+  }
+}
+
+/* =========================================================================
+   Home hero (/) — title block that the v2 variant restyles.
+   ========================================================================= */
+.hero {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 40px 32px;
+  margin-bottom: 40px;
+}
+
+.hero__title {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 10px;
+}
+
+.hero__subtitle {
+  font-size: 16px;
+  color: var(--text-muted);
+  max-width: 640px;
+  margin: 0 0 22px;
+}
+
+.hero__actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* The "new" CTA button only appears in the v2 variant. */
+.hero__cta {
+  display: none;
+}
+
+/* =========================================================================
+   Dynamic page (/dynamic) — fixed profile bar + reflowing card area.
+   The masked avatar + timestamp live in the profile bar so they stay put
+   when the cards below reflow from one column (v1) to two columns (v2);
+   that way the masked regions never contribute to the diff.
+   ========================================================================= */
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.profile__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dynamic-cards {
+  display: grid;
+  grid-template-columns: 1fr; /* single column in v1 */
+  gap: 20px;
+}
+
+/* =========================================================================
+   v2 VARIANT OVERRIDES
+   Each block is scoped to a single page (body.page-* ) so the v2 change for
+   one page never leaks into another. Applied when the variant switcher sets
+   body[data-variant="v2"] (see the per-page inline script).
+   ========================================================================= */
+
+/* /  — large, obvious diff: hero background, bigger heading, extra CTA. */
+.page-home[data-variant="v2"] .hero {
+  background: #b8ccff;
+  border-color: #6f97f0;
+}
+.page-home[data-variant="v2"] .hero__title {
+  font-size: 44px;
+}
+.page-home[data-variant="v2"] .hero__cta {
+  display: inline-flex;
+}
+
+/* /components — moderate diff: rounded buttons, indigo primary, card shadow. */
+.page-components[data-variant="v2"] {
+  --primary: #4f46e5; /* blue -> indigo */
+}
+.page-components[data-variant="v2"] .btn {
+  border-radius: 999px; /* square-ish -> fully rounded pill */
+}
+.page-components[data-variant="v2"] .card {
+  box-shadow: 0 6px 16px rgba(28, 39, 51, 0.16);
+}
+
+/* /dynamic — layout change: card area goes one-column -> two-column. */
+.page-dynamic[data-variant="v2"] .dynamic-cards {
+  grid-template-columns: 1fr 1fr;
+}
+
+/* /themes — subtle diff: dark theme background near-black -> dark navy. */
+.page-themes[data-variant="v2"] [data-theme="dark"] {
+  --bg: #24528f;
+}
+
+/* /states — error styling: red border -> red background fill on the inputs. */
+.page-states[data-variant="v2"] .input--error {
+  background: #ef9a9a;
+  border-color: var(--danger);
+}
+
+/* /slow — v2 only increases the render delay (1s -> 1.5s) in JS; there is no
+   visual change to the loaded content. It verifies the wait strategies still
+   resolve correctly under different timing. */

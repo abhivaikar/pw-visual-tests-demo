@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Themes · pw-visual-tests-demo</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="page-themes">
+    <script>
+      // Visual change simulation: ?variant=v2 renders the changed state.
+      (function () {
+        var v = new URLSearchParams(window.location.search).get("variant");
+        if (v) document.body.setAttribute("data-variant", v);
+      })();
+    </script>
+    <nav class="nav">
+      <a class="nav__brand" href="/">pw-visual-tests-demo</a>
+      <div class="nav__links">
+        <a class="nav__link" href="/">Home</a>
+        <a class="nav__link" href="/components">Components</a>
+        <a class="nav__link" href="/dynamic">Dynamic</a>
+        <a class="nav__link nav__link--active" href="/themes">Themes</a>
+        <a class="nav__link" href="/states">States</a>
+        <a class="nav__link" href="/slow">Slow</a>
+      </div>
+    </nav>
+
+    <main class="page">
+      <h1 class="page__title">Theme Comparison</h1>
+      <p class="page__subtitle">
+        The same UI rendered in light and dark variants side by side. Tests
+        assert visual consistency across themes.
+      </p>
+
+      <section class="section">
+        <div class="theme-split" data-testid="theme-split">
+          <!-- Light pane -->
+          <div class="theme-pane" data-theme="light" data-testid="pane-light">
+            <p class="theme-pane__label">Light</p>
+            <div class="card" style="margin-bottom: 16px">
+              <h3 class="card__title">Account</h3>
+              <p class="card__body">Manage your profile and preferences.</p>
+            </div>
+            <div style="display: flex; gap: 10px; margin-bottom: 16px">
+              <button class="btn btn--primary">Save</button>
+              <button class="btn btn--secondary">Cancel</button>
+            </div>
+            <div style="display: flex; gap: 8px; margin-bottom: 16px">
+              <span class="badge badge--success">Active</span>
+              <span class="badge badge--warning">Trial</span>
+            </div>
+            <div class="alert alert--info">
+              <span class="alert__icon">ℹ</span>
+              <span>Your plan renews on the 1st.</span>
+            </div>
+          </div>
+
+          <!-- Dark pane -->
+          <div class="theme-pane" data-theme="dark" data-testid="pane-dark">
+            <p class="theme-pane__label">Dark</p>
+            <div class="card" style="margin-bottom: 16px">
+              <h3 class="card__title">Account</h3>
+              <p class="card__body">Manage your profile and preferences.</p>
+            </div>
+            <div style="display: flex; gap: 10px; margin-bottom: 16px">
+              <button class="btn btn--primary">Save</button>
+              <button class="btn btn--secondary">Cancel</button>
+            </div>
+            <div style="display: flex; gap: 8px; margin-bottom: 16px">
+              <span class="badge badge--success">Active</span>
+              <span class="badge badge--warning">Trial</span>
+            </div>
+            <div class="alert alert--info">
+              <span class="alert__icon">ℹ</span>
+              <span>Your plan renews on the 1st.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home · pw-visual-tests-demo</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="page-home">
+    <script>
+      // Visual change simulation: ?variant=v2 renders the changed state.
+      (function () {
+        var v = new URLSearchParams(window.location.search).get("variant");
+        if (v) document.body.setAttribute("data-variant", v);
+      })();
+    </script>
+    <nav class="nav">
+      <a class="nav__brand" href="/">pw-visual-tests-demo</a>
+      <div class="nav__links">
+        <a class="nav__link nav__link--active" href="/">Home</a>
+        <a class="nav__link" href="/components">Components</a>
+        <a class="nav__link" href="/dynamic">Dynamic</a>
+        <a class="nav__link" href="/themes">Themes</a>
+        <a class="nav__link" href="/states">States</a>
+        <a class="nav__link" href="/slow">Slow</a>
+      </div>
+    </nav>
+
+    <main class="page">
+      <section class="hero">
+        <h1 class="hero__title">Visual Regression Playground</h1>
+        <p class="hero__subtitle">
+          A stable, deterministic home page used for straightforward full-page
+          screenshot baselines.
+        </p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="/components">Explore components</a>
+          <!-- New CTA button — only rendered in the v2 variant. -->
+          <a class="btn btn--secondary hero__cta" href="/dynamic"
+            >See it live</a
+          >
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="card">
+          <h2 class="card__title">What is this?</h2>
+          <p class="card__body">
+            This application is the testing surface for Playwright's visual
+            regression APIs. Each page demonstrates a specific screenshot
+            scenario — masking, animations, clipping, theming, multi-state
+            snapshots, and more. This home page intentionally contains no
+            dynamic content so its baseline never drifts.
+          </p>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="section__heading">Pages in this demo</h2>
+        <div class="grid grid--3">
+          <div class="card">
+            <h3 class="card__title">Components</h3>
+            <p class="card__body">
+              Element-level screenshots of buttons, cards, badges and inputs.
+            </p>
+          </div>
+          <div class="card">
+            <h3 class="card__title">Dynamic</h3>
+            <p class="card__body">
+              Live timestamp, random quote and avatar — for masking and
+              stylePath.
+            </p>
+          </div>
+          <div class="card">
+            <h3 class="card__title">Themes</h3>
+            <p class="card__body">
+              Light and dark variants side by side for cross-theme
+              consistency checks.
+            </p>
+          </div>
+          <div class="card">
+            <h3 class="card__title">States</h3>
+            <p class="card__body">
+              A form reachable in empty, filled, error and success states via
+              URL params.
+            </p>
+          </div>
+          <div class="card">
+            <h3 class="card__title">Slow</h3>
+            <p class="card__body">
+              Deliberately delayed rendering to exercise waiting strategies.
+            </p>
+          </div>
+          <div class="card">
+            <h3 class="card__title">Home</h3>
+            <p class="card__body">
+              You are here — the stable baseline page.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="alert alert--info">
+          <span class="alert__icon">ℹ</span>
+          <span
+            >All content on this page is static. Re-rendering it should produce
+            a pixel-identical screenshot every time.</span
+          >
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

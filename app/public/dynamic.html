@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dynamic · pw-visual-tests-demo</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="page-dynamic">
+    <script>
+      // Visual change simulation: ?variant=v2 renders the changed state.
+      (function () {
+        var v = new URLSearchParams(window.location.search).get("variant");
+        if (v) document.body.setAttribute("data-variant", v);
+      })();
+    </script>
+    <nav class="nav">
+      <a class="nav__brand" href="/">pw-visual-tests-demo</a>
+      <div class="nav__links">
+        <a class="nav__link" href="/">Home</a>
+        <a class="nav__link" href="/components">Components</a>
+        <a class="nav__link nav__link--active" href="/dynamic">Dynamic</a>
+        <a class="nav__link" href="/themes">Themes</a>
+        <a class="nav__link" href="/states">States</a>
+        <a class="nav__link" href="/slow">Slow</a>
+      </div>
+    </nav>
+
+    <main class="page">
+      <h1 class="page__title">Dynamic Content</h1>
+      <p class="page__subtitle">
+        Live timestamp, random quote and a parameterised avatar. Used for
+        <code>mask</code>, <code>stylePath</code> and
+        <code>omitBackground</code>.
+      </p>
+
+      <!--
+        Fixed profile bar. The masked avatar + timestamp stay in this full-width
+        bar across variants, so when the cards below reflow (v2) the masked
+        regions do not move and never contribute to the diff.
+      -->
+      <section class="section">
+        <div class="card profile" data-testid="profile">
+          <img
+            class="avatar"
+            id="avatar"
+            data-testid="avatar"
+            alt="User avatar"
+          />
+          <div class="profile__meta">
+            <h3 class="card__title" style="margin: 0">Signed in as Ada</h3>
+            <p class="stat__label" style="margin: 0">Current time</p>
+            <p class="stat__value" id="timestamp" data-testid="timestamp">—</p>
+          </div>
+        </div>
+      </section>
+
+      <!--
+        Reflowing content. One column in v1, two columns in v2
+        (.page-dynamic[data-variant="v2"] .dynamic-cards).
+      -->
+      <section class="section">
+        <div class="dynamic-cards" data-testid="dynamic-cards">
+          <div class="stat">
+            <p class="stat__label">Random quote</p>
+            <p class="stat__value" id="quote" data-testid="quote">—</p>
+          </div>
+
+          <div class="card" data-testid="sessions-card">
+            <h3 class="card__title">Sessions</h3>
+            <p class="card__body">128 active sessions in the last hour.</p>
+          </div>
+
+          <div class="card">
+            <h3 class="card__title">Region</h3>
+            <p class="card__body">Serving traffic from us-east-1.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      // --- Live timestamp, ticking every second -------------------------
+      function renderTimestamp() {
+        const el = document.getElementById("timestamp");
+        el.textContent = new Date().toISOString().replace("T", " ").slice(0, 19);
+      }
+      renderTimestamp();
+      setInterval(renderTimestamp, 1000);
+
+      // --- Seed drives both the avatar and the quote -------------------
+      // With ?seed=<value> everything is deterministic (used by tests). With
+      // no seed it falls back to the clock, so the quote/avatar look "random".
+      const params = new URLSearchParams(window.location.search);
+      const seed = params.get("seed") || String(Date.now());
+      // Deterministic hash from the seed string.
+      let hash = 0;
+      for (let i = 0; i < seed.length; i++) {
+        hash = (hash * 31 + seed.charCodeAt(i)) & 0xffffff;
+      }
+
+      // --- Quote, selected deterministically from the seed --------------
+      const QUOTES = [
+        "Move fast and verify pixels.",
+        "A baseline is worth a thousand assertions.",
+        "Trust, but screenshot.",
+        "Flaky tests are just untold stories.",
+        "Diff today, ship tomorrow.",
+      ];
+      document.getElementById("quote").textContent =
+        QUOTES[hash % QUOTES.length];
+
+      // --- Avatar generated from the seed (self-contained, no network) --
+      const hue = hash % 360;
+      const initials = seed.slice(0, 2).toUpperCase();
+      const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='72' height='72'>
+        <rect width='72' height='72' fill='hsl(${hue},65%,55%)'/>
+        <text x='50%' y='54%' dy='.35em' text-anchor='middle'
+          font-family='sans-serif' font-size='28' font-weight='700'
+          fill='white'>${initials}</text></svg>`;
+      document.getElementById("avatar").src =
+        "data:image/svg+xml;base64," + btoa(svg);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,31 @@
+{
+  "name": "pw-visual-tests-demo",
+  "version": "1.0.0",
+  "description": "A self-contained demo app + Playwright suite exercising every Playwright visual regression API. Also the testing surface for the pw-ui-review tool.",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node app/server.js",
+    "test": "playwright test",
+    "test:variant": "playwright test --config=playwright.variant.config.ts",
+    "test:ui": "playwright test --ui",
+    "baselines:generate": "playwright test --update-snapshots",
+    "baselines:reset": "playwright test --update-snapshots",
+    "simulate:failures": "npm run test:variant",
+    "report": "playwright show-report"
+  },
+  "keywords": [
+    "playwright",
+    "visual-regression",
+    "screenshot-testing",
+    "pw-ui-review"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "@types/node": "^22.10.0"
+  }
+}

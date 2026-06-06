@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>States · pw-visual-tests-demo</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="page-states">
+    <script>
+      // Visual change simulation: ?variant=v2 renders the changed state.
+      (function () {
+        var v = new URLSearchParams(window.location.search).get("variant");
+        if (v) document.body.setAttribute("data-variant", v);
+      })();
+    </script>
+    <nav class="nav">
+      <a class="nav__brand" href="/">pw-visual-tests-demo</a>
+      <div class="nav__links">
+        <a class="nav__link" href="/">Home</a>
+        <a class="nav__link" href="/components">Components</a>
+        <a class="nav__link" href="/dynamic">Dynamic</a>
+        <a class="nav__link" href="/themes">Themes</a>
+        <a class="nav__link nav__link--active" href="/states">States</a>
+        <a class="nav__link" href="/slow">Slow</a>
+      </div>
+    </nav>
+
+    <main class="page">
+      <h1 class="page__title">Form States</h1>
+      <p class="page__subtitle">
+        The same sign-up form in four states, each reachable directly via
+        <code>?state=empty|filled|error|success</code>. A single test can
+        snapshot every state.
+      </p>
+
+      <section class="section">
+        <div class="card" style="max-width: 460px" data-testid="signup-form">
+          <h2 class="card__title" style="margin-bottom: 20px">
+            Create your account
+          </h2>
+
+          <!-- Status banner — only shown for error / success. -->
+          <div id="banner"></div>
+
+          <div class="field">
+            <label class="field__label" for="email">Email</label>
+            <input
+              class="input"
+              id="email"
+              type="email"
+              placeholder="you@example.com"
+            />
+            <div class="field__hint" id="email-hint"></div>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="password">Password</label>
+            <input
+              class="input"
+              id="password"
+              type="password"
+              placeholder="••••••••"
+            />
+            <div class="field__hint" id="password-hint"></div>
+          </div>
+
+          <button class="btn btn--primary" id="submit" style="width: 100%">
+            Sign up
+          </button>
+        </div>
+      </section>
+
+      <section class="section">
+        <p class="card__body">
+          Try:
+          <a href="?state=empty">empty</a> ·
+          <a href="?state=filled">filled</a> ·
+          <a href="?state=error">error</a> ·
+          <a href="?state=success">success</a>
+        </p>
+      </section>
+    </main>
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const state = params.get("state") || "empty";
+      document.body.setAttribute("data-state", state);
+
+      const email = document.getElementById("email");
+      const password = document.getElementById("password");
+      const emailHint = document.getElementById("email-hint");
+      const passwordHint = document.getElementById("password-hint");
+      const banner = document.getElementById("banner");
+      const submit = document.getElementById("submit");
+
+      function applyState(s) {
+        // Reset.
+        email.classList.remove("input--error", "input--success");
+        password.classList.remove("input--error", "input--success");
+        emailHint.textContent = "";
+        passwordHint.textContent = "";
+        emailHint.className = "field__hint";
+        passwordHint.className = "field__hint";
+        banner.innerHTML = "";
+
+        if (s === "filled") {
+          email.value = "ada@example.com";
+          password.value = "correcthorse";
+        } else if (s === "error") {
+          email.value = "not-an-email";
+          password.value = "123";
+          email.classList.add("input--error");
+          password.classList.add("input--error");
+          emailHint.textContent = "Enter a valid email address.";
+          emailHint.className = "field__hint field__hint--error";
+          passwordHint.textContent = "Password must be at least 8 characters.";
+          passwordHint.className = "field__hint field__hint--error";
+          banner.innerHTML =
+            '<div class="alert alert--danger"><span class="alert__icon">✕</span><span>Please fix the errors below.</span></div>';
+        } else if (s === "success") {
+          email.value = "ada@example.com";
+          password.value = "correcthorse";
+          email.classList.add("input--success");
+          password.classList.add("input--success");
+          emailHint.textContent = "Looks good.";
+          emailHint.className = "field__hint field__hint--success";
+          submit.textContent = "Account created";
+          banner.innerHTML =
+            '<div class="alert alert--success"><span class="alert__icon">✓</span><span>Welcome aboard! Your account is ready.</span></div>';
+        }
+        // "empty" => leave everything blank.
+      }
+
+      applyState(state);
+    </script>
+  </body>
+</html>

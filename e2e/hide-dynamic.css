@@ -1,0 +1,10 @@
+/*
+ * Injected via toHaveScreenshot({ stylePath }) as an alternative to masking.
+ * Hides the volatile elements on /dynamic so the screenshot is deterministic
+ * without drawing pink mask boxes over them.
+ */
+[data-testid="timestamp"],
+[data-testid="quote"],
+[data-testid="avatar"] {
+  visibility: hidden !important;
+}

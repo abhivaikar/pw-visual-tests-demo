@@ -1,0 +1,2 @@
+# Track all baseline screenshots in snapshots/ via Git LFS.
+snapshots/**/*.png filter=lfs diff=lfs merge=lfs -text

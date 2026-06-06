@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Components · pw-visual-tests-demo</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="page-components">
+    <script>
+      // Visual change simulation: ?variant=v2 renders the changed state.
+      (function () {
+        var v = new URLSearchParams(window.location.search).get("variant");
+        if (v) document.body.setAttribute("data-variant", v);
+      })();
+    </script>
+    <nav class="nav">
+      <a class="nav__brand" href="/">pw-visual-tests-demo</a>
+      <div class="nav__links">
+        <a class="nav__link" href="/">Home</a>
+        <a class="nav__link nav__link--active" href="/components">Components</a>
+        <a class="nav__link" href="/dynamic">Dynamic</a>
+        <a class="nav__link" href="/themes">Themes</a>
+        <a class="nav__link" href="/states">States</a>
+        <a class="nav__link" href="/slow">Slow</a>
+      </div>
+    </nav>
+
+    <main class="page">
+      <h1 class="page__title">Component Showcase</h1>
+      <p class="page__subtitle">
+        A grid of stable UI components. Tests take element-level screenshots of
+        individual components via <code>locator.toHaveScreenshot()</code>.
+      </p>
+
+      <!-- Buttons ------------------------------------------------------ -->
+      <section class="section" id="buttons-section">
+        <h2 class="section__heading">Buttons</h2>
+        <div class="card" data-testid="buttons">
+          <div style="display: flex; gap: 12px; flex-wrap: wrap">
+            <button class="btn btn--primary">Primary</button>
+            <button class="btn btn--secondary">Secondary</button>
+            <button class="btn btn--danger">Danger</button>
+            <button class="btn btn--ghost">Ghost</button>
+            <button class="btn btn--primary" disabled>Disabled</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Cards -------------------------------------------------------- -->
+      <section class="section" id="cards-section">
+        <h2 class="section__heading">Cards</h2>
+        <div class="grid grid--3" data-testid="cards">
+          <div class="card">
+            <h3 class="card__title">Starter</h3>
+            <p class="card__body">Everything you need to begin.</p>
+          </div>
+          <div class="card">
+            <h3 class="card__title">Pro</h3>
+            <p class="card__body">For growing teams and projects.</p>
+          </div>
+          <div class="card">
+            <h3 class="card__title">Enterprise</h3>
+            <p class="card__body">Advanced controls and support.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Badges ------------------------------------------------------- -->
+      <section class="section" id="badges-section">
+        <h2 class="section__heading">Badges</h2>
+        <div class="card" data-testid="badges">
+          <div style="display: flex; gap: 12px; flex-wrap: wrap">
+            <span class="badge">Default</span>
+            <span class="badge badge--success">Success</span>
+            <span class="badge badge--danger">Danger</span>
+            <span class="badge badge--warning">Warning</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Form inputs -------------------------------------------------- -->
+      <section class="section" id="inputs-section">
+        <h2 class="section__heading">Form inputs</h2>
+        <div class="card" data-testid="inputs">
+          <div class="field">
+            <label class="field__label" for="name">Full name</label>
+            <input class="input" id="name" type="text" value="Ada Lovelace" />
+          </div>
+          <div class="field">
+            <label class="field__label" for="role">Role</label>
+            <select class="select" id="role">
+              <option>Engineer</option>
+              <option>Designer</option>
+              <option>Product</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field__label" for="bio">Bio</label>
+            <textarea class="textarea" id="bio" rows="3">
+Building delightful software.</textarea
+            >
+          </div>
+        </div>
+      </section>
+
+      <!-- Alerts ------------------------------------------------------- -->
+      <section class="section" id="alerts-section">
+        <h2 class="section__heading">Alerts</h2>
+        <div data-testid="alerts">
+          <div class="alert alert--info">
+            <span class="alert__icon">ℹ</span>
+            <span>Informational message for the user.</span>
+          </div>
+          <div class="alert alert--success">
+            <span class="alert__icon">✓</span>
+            <span>Your changes have been saved.</span>
+          </div>
+          <div class="alert alert--warning">
+            <span class="alert__icon">!</span>
+            <span>Your trial ends in three days.</span>
+          </div>
+          <div class="alert alert--danger">
+            <span class="alert__icon">✕</span>
+            <span>Something went wrong. Please try again.</span>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

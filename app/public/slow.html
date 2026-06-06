@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Slow · pw-visual-tests-demo</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="page-slow">
+    <script>
+      // Visual change simulation: ?variant=v2 renders the changed state.
+      (function () {
+        var v = new URLSearchParams(window.location.search).get("variant");
+        if (v) document.body.setAttribute("data-variant", v);
+      })();
+    </script>
+    <nav class="nav">
+      <a class="nav__brand" href="/">pw-visual-tests-demo</a>
+      <div class="nav__links">
+        <a class="nav__link" href="/">Home</a>
+        <a class="nav__link" href="/components">Components</a>
+        <a class="nav__link" href="/dynamic">Dynamic</a>
+        <a class="nav__link" href="/themes">Themes</a>
+        <a class="nav__link" href="/states">States</a>
+        <a class="nav__link nav__link--active" href="/slow">Slow</a>
+      </div>
+    </nav>
+
+    <main class="page">
+      <h1 class="page__title">Slow Rendering</h1>
+      <p class="page__subtitle">
+        Content is injected after a deliberate delay. Tests must wait for it to
+        be stable before snapshotting. Also tall enough to scroll, so it doubles
+        as the <code>fullPage</code> target.
+      </p>
+
+      <!-- Static placeholder shown until the real content is ready. -->
+      <div id="placeholder" class="card slow-placeholder" data-testid="placeholder">
+        Loading content…
+      </div>
+
+      <!-- Real content, revealed after the timeout. Starts hidden. -->
+      <div
+        id="content"
+        class="slow-content tall"
+        data-testid="slow-content"
+        hidden
+      >
+        <section class="section">
+          <div class="alert alert--success" data-testid="ready-banner">
+            <span class="alert__icon">✓</span>
+            <span>Content has finished loading and is now stable.</span>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="grid grid--2">
+            <div class="card">
+              <h3 class="card__title">Report A</h3>
+              <p class="card__body">Quarterly metrics rendered after load.</p>
+            </div>
+            <div class="card">
+              <h3 class="card__title">Report B</h3>
+              <p class="card__body">Secondary dataset for comparison.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Filler blocks guarantee the page scrolls for fullPage tests. -->
+        <section class="section">
+          <div class="tall__filler">Scrollable region 1</div>
+          <div class="tall__filler">Scrollable region 2</div>
+          <div class="tall__filler">Scrollable region 3</div>
+        </section>
+      </div>
+    </main>
+
+    <script>
+      // Reveal content after a deliberate delay to simulate slow rendering.
+      // v1 waits 1s; the v2 variant increases this to 1.5s. Either way the
+      // suite's wait strategies (waitForSelector / locator.waitFor /
+      // waitForTimeout) must still resolve against the stable content.
+      const isV2 =
+        new URLSearchParams(window.location.search).get("variant") === "v2";
+      const DELAY_MS = isV2 ? 1500 : 1000;
+      setTimeout(() => {
+        const placeholder = document.getElementById("placeholder");
+        const content = document.getElementById("content");
+        placeholder.hidden = true;
+        content.hidden = false;
+        // Force a reflow then add the ready class so opacity transitions in.
+        void content.offsetHeight;
+        content.classList.add("slow-content--ready");
+        content.setAttribute("data-ready", "true");
+      }, DELAY_MS);
+    </script>
+  </body>
+</html>
