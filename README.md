@@ -93,20 +93,24 @@ npx playwright install chromium
 
 ## Start the app
 
+The app must be running **before** you run the tests — Playwright does **not**
+start or manage it. In one terminal:
+
 ```bash
 npm start
 # -> pw-visual-tests-demo app running at http://localhost:3000
 ```
 
-You normally do **not** need to start the app manually for tests — the
-Playwright `webServer` config boots it automatically. Starting it by hand is
-useful for eyeballing pages or generating avatars (`/dynamic?seed=ada`).
+Leave it running. (It's also handy for eyeballing pages or generating avatars,
+e.g. `/dynamic?seed=ada`.)
 
 ## Run the tests
 
+With the app already running (see above), in a second terminal:
+
 ```bash
 npm test                 # run the suite against v1 (baseline)
-npm run test:variant     # run the suite against v2 (changed) — see "Simulating failures"
+npm run test:variant     # run the suite against v2 (changed) — see "Simulating visual failures"
 npm run test:ui          # interactive UI mode
 npm run report           # open the last HTML report
 ```
@@ -182,6 +186,9 @@ modes.
 ### Workflow
 
 ```bash
+# Step 0 — start the app in another terminal (and leave it running)
+npm start
+
 # Step 1 — generate v1 baselines (only needed once, or after a reset)
 npm run baselines:generate
 
@@ -253,7 +260,7 @@ correctly under different timing, not to produce a visual diff.
 - HTML reporter with `open: 'never'`
 - `trace: 'on'` for all tests
 - Single project: standard desktop Chromium at 1280×720
-- `webServer` auto-starts the app
+- No `webServer` — start the app yourself (`npm start`) before running tests
 - `snapshotDir` explicitly set to `./snapshots`
 - `expect.toHaveScreenshot` defaults: `animations: 'disabled'` + base `threshold`
 

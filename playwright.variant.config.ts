@@ -3,7 +3,7 @@ import baseConfig from './playwright.config';
 
 /**
  * Variant config — identical to playwright.config.ts in every respect
- * (snapshotDir, project, reporters, webServer, expect defaults), so screenshots
+ * (snapshotDir, project, reporters, expect defaults), so screenshots
  * are written to and compared against the SAME v1 baselines.
  *
  * The only difference: it sets PW_VARIANT=v2, which the fixture in

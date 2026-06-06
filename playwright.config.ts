@@ -59,11 +59,6 @@ export default defineConfig({
     },
   ],
 
-  // Start the demo app automatically before the suite runs.
-  webServer: {
-    command: 'npm start',
-    url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
-    timeout: 30 * 1000,
-  },
+  // NOTE: Playwright does NOT manage the app server. Start it yourself with
+  // `npm start` (http://localhost:3000) before running the suite.
 });
