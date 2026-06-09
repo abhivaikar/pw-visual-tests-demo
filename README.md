@@ -31,6 +31,7 @@ pw-visual-tests-demo/
 │       ├── themes.html        # /themes     light vs dark side by side
 │       ├── states.html        # /states     ?state= empty|filled|error|success
 │       ├── slow.html          # /slow       delayed render + scrollable
+│       ├── todo.html          # /todo       self-contained TodoMVC-style app
 │       └── styles.css         # shared stylesheet
 ├── e2e/
 │   ├── home.spec.ts
@@ -40,6 +41,7 @@ pw-visual-tests-demo/
 │   ├── states.spec.ts
 │   ├── slow.spec.ts
 │   ├── buffer-snapshot.spec.ts
+│   ├── todo.spec.ts          # business-intent tests (requirements + snapshots)
 │   ├── fixtures.ts            # variant fixture (appends ?variant=v2)
 │   └── hide-dynamic.css       # injected via stylePath
 ├── snapshots/                 # snapshotDir — v1 baseline PNGs, committed via Git LFS
@@ -54,7 +56,7 @@ pw-visual-tests-demo/
 
 ## The demo app
 
-A lightweight Express server serves six purpose-built pages, each targeting a
+A lightweight Express server serves seven purpose-built pages, each targeting a
 specific visual-regression scenario:
 
 | Route         | Purpose                                                                 |
@@ -65,6 +67,7 @@ specific visual-regression scenario:
 | `/themes`     | Same UI in light and dark variants side by side.                        |
 | `/states`     | Sign-up form reachable in 4 states via `?state=`.                       |
 | `/slow`       | Content revealed after ~1s (1.5s in v2); also tall enough to scroll.    |
+| `/todo`       | A self-contained TodoMVC-style app — the target for business-intent tests. |
 
 A consistent nav bar appears on every page. Plain HTML + CSS only — no React, no
 build step, no bundler.
@@ -103,6 +106,13 @@ npm start
 
 Leave it running. (It's also handy for eyeballing pages or generating avatars,
 e.g. `/dynamic?seed=ada`.)
+
+To stop it — or to clear a stale instance holding port 3000 (an `EADDRINUSE`
+error on `npm start`) — run:
+
+```bash
+npm stop
+```
 
 ## Run the tests
 
@@ -209,8 +219,9 @@ exactly the artifacts `pw-ui-review` consumes.
 
 ### What `simulate:failures` produces
 
-Running `baselines:generate` then `simulate:failures` fails **13 of 24 tests,
-across 6 of the 7 spec files**, spanning a realistic range of diff sizes:
+Running `baselines:generate` then `simulate:failures` fails **13 tests across 6
+spec files** (the `slow` and `todo` specs stay green — they have no v2 visual
+change), spanning a realistic range of diff sizes:
 
 | Spec / test                                   | Diff (% of pixels) |
 | --------------------------------------------- | ------------------ |
@@ -253,8 +264,28 @@ correctly under different timing, not to produce a visual diff.
 | `states.spec.ts`           | Multiple `toHaveScreenshot()` calls within a single test, one per form state via `?state=`.                                            |
 | `slow.spec.ts`             | `waitForSelector`, `locator.waitFor`, `waitForTimeout`; `fullPage: true` on scrollable content.                                        |
 | `buffer-snapshot.spec.ts`  | `page.screenshot()` buffer compared via `expect(buffer).toMatchSnapshot()` (page, element, and fullPage variants).                      |
+| `todo.spec.ts`             | **Business-intent tests** (see below): real user actions + element/page snapshots as the assertion.                                     |
 
-### Config-level coverage (`playwright.config.ts`)
+### Business-intent tests (`todo.spec.ts`)
+
+The specs above are organised by *API* — they exist to exercise Playwright's
+visual options. `todo.spec.ts` is the opposite: it shows how a product team
+would actually write visual tests against the `/todo` app — as **user-facing
+requirements**, not UI mechanics. Each test:
+
+- is named after a requirement ("the count uses singular wording when one task
+  remains", "the Active filter shows only unfinished work");
+- arranges state through **real user actions** (typing a task and pressing
+  Enter, checking a box, clicking a filter, double-clicking to rename);
+- uses **accessibility-first locators** (`getByRole`, `getByPlaceholder`,
+  `getByLabel`) so it describes intent rather than markup;
+- asserts the outcome with a **visual snapshot** of the relevant region or
+  element — pinning down "what the user should see".
+
+13 requirements are covered: empty state, capturing a task, ordering, the
+outstanding-count (incl. singular/plural copy), completing/reopening, the
+Active/Completed filters, renaming, deleting, mark-all-complete, and
+clear-completed.
 
 - JSON reporter → `test-results/results.json`
 - HTML reporter with `open: 'never'`

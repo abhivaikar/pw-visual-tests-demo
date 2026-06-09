@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To-dos · pw-visual-tests-demo</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="page-todo">
+    <script>
+      // Visual change simulation: ?variant=v2 renders the changed state.
+      (function () {
+        var v = new URLSearchParams(window.location.search).get("variant");
+        if (v) document.body.setAttribute("data-variant", v);
+      })();
+    </script>
+    <nav class="nav">
+      <a class="nav__brand" href="/">pw-visual-tests-demo</a>
+      <div class="nav__links">
+        <a class="nav__link" href="/">Home</a>
+        <a class="nav__link" href="/components">Components</a>
+        <a class="nav__link" href="/dynamic">Dynamic</a>
+        <a class="nav__link" href="/themes">Themes</a>
+        <a class="nav__link" href="/states">States</a>
+        <a class="nav__link" href="/slow">Slow</a>
+        <a class="nav__link nav__link--active" href="/todo">Todos</a>
+      </div>
+    </nav>
+
+    <main class="page">
+      <h1 class="page__title">To-dos</h1>
+      <p class="page__subtitle">
+        A small, self-contained TodoMVC-style app. The accompanying tests are
+        written as user-facing requirements, each verified with a snapshot.
+      </p>
+
+      <section class="todoapp" aria-label="To-do app">
+        <header class="todoapp__header">
+          <h2 class="todoapp__title">todos</h2>
+          <input
+            class="new-todo"
+            placeholder="What needs to be done?"
+            aria-label="New to-do"
+            autocomplete="off"
+          />
+        </header>
+
+        <section class="main" hidden>
+          <div class="toggle-all-row">
+            <input id="toggle-all" class="toggle-all" type="checkbox" />
+            <label for="toggle-all">Mark all as complete</label>
+          </div>
+          <ul class="todo-list" aria-label="To-dos"></ul>
+        </section>
+
+        <footer class="footer" hidden>
+          <span class="todo-count" data-testid="todo-count"
+            ><strong>0</strong> items left</span
+          >
+          <ul class="filters">
+            <li><a href="#/">All</a></li>
+            <li><a href="#/active">Active</a></li>
+            <li><a href="#/completed">Completed</a></li>
+          </ul>
+          <button class="clear-completed" hidden>Clear completed</button>
+        </footer>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        const STORAGE_KEY = "todos-pwdemo";
+
+        const newTodo = document.querySelector(".new-todo");
+        const list = document.querySelector(".todo-list");
+        const main = document.querySelector(".main");
+        const footer = document.querySelector(".footer");
+        const countEl = document.querySelector(".todo-count");
+        const toggleAll = document.querySelector(".toggle-all");
+        const clearBtn = document.querySelector(".clear-completed");
+
+        let nextId = 1;
+        let todos = load();
+
+        function load() {
+          try {
+            return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+          } catch (e) {
+            return [];
+          }
+        }
+        function save() {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+        }
+
+        function currentFilter() {
+          const h = location.hash.replace("#/", "");
+          return h === "active" || h === "completed" ? h : "all";
+        }
+
+        function visible() {
+          const f = currentFilter();
+          return todos.filter((t) =>
+            f === "all" ? true : f === "active" ? !t.completed : t.completed
+          );
+        }
+
+        function render() {
+          const hasTodos = todos.length > 0;
+          main.hidden = !hasTodos;
+          footer.hidden = !hasTodos;
+
+          list.innerHTML = "";
+          for (const t of visible()) {
+            const li = document.createElement("li");
+            li.className = "todo-item" + (t.completed ? " completed" : "");
+            li.dataset.id = String(t.id);
+
+            const view = document.createElement("div");
+            view.className = "view";
+
+            const toggle = document.createElement("input");
+            toggle.type = "checkbox";
+            toggle.className = "toggle";
+            toggle.checked = t.completed;
+            toggle.setAttribute("aria-label", "Toggle " + t.title);
+
+            const label = document.createElement("label");
+            label.textContent = t.title;
+
+            const destroy = document.createElement("button");
+            destroy.className = "destroy";
+            destroy.type = "button";
+            destroy.setAttribute("aria-label", "Delete " + t.title);
+            destroy.textContent = "×";
+
+            view.append(toggle, label, destroy);
+
+            const edit = document.createElement("input");
+            edit.className = "edit";
+            edit.value = t.title;
+            edit.setAttribute("aria-label", "Edit to-do");
+
+            li.append(view, edit);
+            list.append(li);
+          }
+
+          const left = todos.filter((t) => !t.completed).length;
+          countEl.innerHTML =
+            "<strong>" + left + "</strong> item" + (left === 1 ? "" : "s") + " left";
+
+          toggleAll.checked = hasTodos && todos.every((t) => t.completed);
+          clearBtn.hidden = !todos.some((t) => t.completed);
+
+          document.querySelectorAll(".filters a").forEach((a) => {
+            const f = a.getAttribute("href").replace("#/", "") || "all";
+            a.classList.toggle("selected", f === currentFilter());
+          });
+
+          save();
+        }
+
+        function byId(id) {
+          return todos.find((t) => t.id === id);
+        }
+        function commitEdit(li, value) {
+          const id = Number(li.dataset.id);
+          const title = value.trim();
+          if (title) byId(id).title = title;
+          else todos = todos.filter((t) => t.id !== id);
+          li.classList.remove("editing");
+          render();
+        }
+
+        // Capture a new to-do.
+        newTodo.addEventListener("keydown", (e) => {
+          if (e.key !== "Enter") return;
+          const title = newTodo.value.trim();
+          if (!title) return;
+          todos.push({ id: nextId++, title: title, completed: false });
+          newTodo.value = "";
+          render();
+        });
+
+        // Toggle / delete via event delegation.
+        list.addEventListener("click", (e) => {
+          const li = e.target.closest(".todo-item");
+          if (!li) return;
+          const id = Number(li.dataset.id);
+          if (e.target.classList.contains("toggle")) {
+            byId(id).completed = e.target.checked;
+            render();
+          } else if (e.target.classList.contains("destroy")) {
+            todos = todos.filter((t) => t.id !== id);
+            render();
+          }
+        });
+
+        // Begin editing on double-click of the label.
+        list.addEventListener("dblclick", (e) => {
+          if (e.target.tagName !== "LABEL") return;
+          const li = e.target.closest(".todo-item");
+          li.classList.add("editing");
+          const edit = li.querySelector(".edit");
+          edit.focus();
+          edit.setSelectionRange(edit.value.length, edit.value.length);
+        });
+
+        // Commit / cancel an edit.
+        list.addEventListener("keydown", (e) => {
+          if (!e.target.classList.contains("edit")) return;
+          const li = e.target.closest(".todo-item");
+          if (e.key === "Enter") commitEdit(li, e.target.value);
+          else if (e.key === "Escape") {
+            li.classList.remove("editing");
+            render();
+          }
+        });
+        list.addEventListener(
+          "blur",
+          (e) => {
+            if (!e.target.classList.contains("edit")) return;
+            const li = e.target.closest(".todo-item");
+            if (li.classList.contains("editing")) commitEdit(li, e.target.value);
+          },
+          true
+        );
+
+        // Mark all complete / active.
+        toggleAll.addEventListener("change", () => {
+          const done = toggleAll.checked;
+          todos.forEach((t) => (t.completed = done));
+          render();
+        });
+
+        // Clear finished work.
+        clearBtn.addEventListener("click", () => {
+          todos = todos.filter((t) => !t.completed);
+          render();
+        });
+
+        window.addEventListener("hashchange", render);
+        render();
+      })();
+    </script>
+  </body>
+</html>

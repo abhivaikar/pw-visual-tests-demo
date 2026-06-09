@@ -5,6 +5,7 @@
   "type": "commonjs",
   "scripts": {
     "start": "node app/server.js",
+    "stop": "pkill -f 'node app/server.js' || true",
     "test": "playwright test",
     "test:variant": "playwright test --config=playwright.variant.config.ts",
     "test:ui": "playwright test --ui",

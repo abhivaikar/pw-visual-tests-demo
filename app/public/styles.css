@@ -566,3 +566,191 @@ body {
 /* /slow — v2 only increases the render delay (1s -> 1.5s) in JS; there is no
    visual change to the loaded content. It verifies the wait strategies still
    resolve correctly under different timing. */
+
+/* =========================================================================
+   To-do app (/todo) — small TodoMVC-style widget. Built in our own app and
+   styled with the shared design tokens. Used for business-intent tests.
+   ========================================================================= */
+.todoapp {
+  max-width: 520px;
+  margin: 0 auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+/* Hide empty-state sections reliably (UA [hidden] would otherwise lose to the
+   display rules below). */
+.todoapp [hidden] {
+  display: none !important;
+}
+
+.todoapp__title {
+  text-align: center;
+  font-size: 38px;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: -0.02em;
+  margin: 0;
+  padding: 18px 0 6px;
+}
+
+.new-todo {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 17px;
+  padding: 16px 20px;
+  border: none;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.new-todo:focus {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--badge-bg);
+}
+
+.new-todo::placeholder {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.toggle-all-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.toggle-all {
+  width: 18px;
+  height: 18px;
+}
+
+.todo-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  font-size: 16px;
+}
+
+.todo-item .view {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.todo-item .toggle {
+  width: 20px;
+  height: 20px;
+  flex: none;
+}
+
+.todo-item label {
+  flex: 1;
+  color: var(--text);
+  word-break: break-word;
+}
+
+.todo-item.completed label {
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+
+/* Always visible (no hover dependency) so screenshots stay deterministic. */
+.todo-item .destroy {
+  flex: none;
+  border: none;
+  background: transparent;
+  color: var(--danger);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+.todo-item .edit {
+  display: none;
+  flex: 1;
+  font-family: inherit;
+  font-size: 16px;
+  padding: 6px 10px;
+  border: 1px solid var(--primary);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.todo-item.editing .view {
+  display: none;
+}
+
+.todo-item.editing .edit {
+  display: block;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px 20px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.todo-count strong {
+  color: var(--text);
+}
+
+.filters {
+  display: flex;
+  gap: 6px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.filters a {
+  text-decoration: none;
+  color: var(--text-muted);
+  padding: 3px 9px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+}
+
+.filters a.selected {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.clear-completed {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.clear-completed:hover {
+  text-decoration: underline;
+}

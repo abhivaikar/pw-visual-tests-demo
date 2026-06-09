@@ -31,6 +31,7 @@ const ROUTES = {
   '/themes': 'themes.html',
   '/states': 'states.html',
   '/slow': 'slow.html',
+  '/todo': 'todo.html',
 };
 
 for (const [route, file] of Object.entries(ROUTES)) {

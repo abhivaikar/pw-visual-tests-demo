@@ -30,6 +30,7 @@ export default defineConfig({
     ['list'],
     ['json', { outputFile: 'test-results/results.json' }],
     ['html', { open: 'never', outputFolder: 'playwright-report' }],
+    ['pw-ui-review/reporter'],   // optional — adds the Steps panel
   ],
 
   use: {
