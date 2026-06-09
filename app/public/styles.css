@@ -567,6 +567,23 @@ body {
    visual change to the loaded content. It verifies the wait strategies still
    resolve correctly under different timing. */
 
+/* /todo — v2 polish: completed tasks get a green accent (left border + green
+   label), and the outstanding count is emphasised as a pill. This surfaces as
+   diffs on the requirements that show completed tasks or the footer count,
+   while the empty state and pure-capture views stay unaffected. */
+.page-todo[data-variant="v2"] .todo-item.completed {
+  border-left: 4px solid var(--success);
+}
+.page-todo[data-variant="v2"] .todo-item.completed label {
+  color: var(--success);
+}
+.page-todo[data-variant="v2"] .todo-count strong {
+  background: var(--badge-bg);
+  color: var(--primary);
+  padding: 1px 8px;
+  border-radius: 999px;
+}
+
 /* =========================================================================
    To-do app (/todo) — small TodoMVC-style widget. Built in our own app and
    styled with the shared design tokens. Used for business-intent tests.

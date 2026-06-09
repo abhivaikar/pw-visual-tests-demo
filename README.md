@@ -178,6 +178,7 @@ scoped to `body[data-variant="v2"]`. No server-side logic.
 | `/themes`     | Dark theme background near-black → dark navy.                                    | Subtle colour shift.                   |
 | `/states`     | Error state: red border → red background fill on the input.                     | Only the error snapshot changes.       |
 | `/slow`       | Render delay 1s → 1.5s (no visual change to loaded content).                     | Tests wait strategies under new timing.|
+| `/todo`       | Completed tasks get a green accent; the outstanding count becomes a pill.        | Breaks done-task & count views; empty state unaffected.|
 
 ### The variant test harness
 
@@ -219,9 +220,9 @@ exactly the artifacts `pw-ui-review` consumes.
 
 ### What `simulate:failures` produces
 
-Running `baselines:generate` then `simulate:failures` fails **13 tests across 6
-spec files** (the `slow` and `todo` specs stay green — they have no v2 visual
-change), spanning a realistic range of diff sizes:
+Running `baselines:generate` then `simulate:failures` fails **25 tests across 7
+spec files** (only `slow` stays green), spanning a realistic range of diff
+sizes:
 
 | Spec / test                                   | Diff (% of pixels) |
 | --------------------------------------------- | ------------------ |
@@ -230,18 +231,22 @@ change), spanning a realistic range of diff sizes:
 | `buffer-snapshot` page buffer                 | **23.86%**         |
 | `home` fullPage                               | **15.98%**         |
 | `states` error snapshot (1 of 4 in the test)  | **15.86%**         |
+| `todo` count element (one / two left)         | **11.18–11.47%**   |
 | `themes` full page                            | **10.67%**         |
+| `todo` mark-all / completed views             | 0.71–1.14%         |
 | `components` alerts                            | 0.81%              |
 | `components` buttons / clip, `buffer` element | 0.40–0.60%         |
+| `todo` active / capture views (count pill)    | 0.10–0.32%         |
 | `dynamic` mask / stylePath (layout reflow)    | 0.23%              |
 
 This satisfies the intended spread: at least one **large** diff (>5% — themes,
-home, states), at least one **subtle** diff (<1% — the element-level shots and
-the `/dynamic` reflow), and a **multi-snapshot** test where only some snapshots
-change (`states`: the `empty` and `filled` snapshots still match, only `error`
-fails). The masked timestamp + avatar on `/dynamic` sit in a fixed profile bar,
-so even though the layout reflows in v2 they contribute **zero** diff pixels —
-the entire `/dynamic` diff comes from the card area below them.
+home, states, the `todo` count pill), at least one **subtle** diff (<1% — the
+element-level shots, the `/dynamic` reflow, and the `todo` count-in-footer), and
+**partial** tests where only some snapshots change (`states`: only `error`
+fails; `todo`: the empty-state snapshot stays green while completed-task and
+count views break). The masked timestamp + avatar on `/dynamic` sit in a fixed
+profile bar, so even though the layout reflows in v2 they contribute **zero**
+diff pixels — the entire `/dynamic` diff comes from the card area below them.
 
 `slow.spec.ts` is the one spec that stays green in v2: its only v2 change is the
 render delay (1s → 1.5s), which is not visible once content has loaded. That is
